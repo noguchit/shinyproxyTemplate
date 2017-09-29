@@ -1,0 +1,53 @@
+shiny:
+  proxy:
+    title: Open Analytics Shiny Proxy
+    logo-url: http://www.openanalytics.eu/sites/www.openanalytics.eu/themes/oa/logo.png
+    landing-page: /
+    heartbeat-rate: 10000
+    heartbeat-timeout: 60000
+    port: 8080
+    authentication: simple 
+    admin-groups: staff
+    # Example: 'simple' authentication configuration
+    users:
+    - name: cream
+      password: crimson 
+      groups: staff
+    # Example: 'ldap' authentication configuration
+    #ldap:
+    #  url: ldap://ads.iu.edu:636/ou=Accounts,dc=ads,dc=iu,dc=edu
+    #  user-dn-pattern: uid={0}
+    #  group-search-base:
+    #  group-search-filter: (uniqueMember={0})
+    #  manager-dn: cn=read-only-admin,dc=example,dc=com
+    #  manager-password: password
+    # Docker configuration
+    docker:
+      cert-path: /home/none
+      url: http://localhost:2375
+      port-range-start: 20000
+  apps:
+  - name: 01_hello
+    display-name: Hello Application
+    description: Application which demonstrates the basics of a Shiny app
+    docker-cmd: ["R", "-e shinyproxy::run_01_hello()"]
+    docker-image: openanalytics/shinyproxy-demo
+    groups: staff
+  - name: 06_tabsets
+    docker-cmd: ["R", "-e shinyproxy::run_06_tabsets()"]
+    docker-image: openanalytics/shinyproxy-demo
+    groups: staff
+  - name: 08_wordcount
+    display-name: Wordcount
+    docker-cmd: ["R", "-e shiny::runApp('/root/wordcount')"]
+    docker-image: takuya/kotoba 
+    groups: staff
+  - name: 10_movie
+    display-name: movie watch
+    docker-cmd: ["R", "-e shiny::runApp('/root/movie')"]
+    docker-image: takuya/kotoba
+    group: staff
+
+logging:
+  file:
+    shinyproxy.log
